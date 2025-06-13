@@ -1,0 +1,23 @@
+<launch>
+    <!-- Paths -->
+    <let name="urdf_path" value="$(find-pkg-share diffdrive_description)/urdf/my_robot.urdf.xacro"/>
+    <let name="rviz_path" value="$(find-pkg-share diffdrive_description)/rviz/diffdrive_config.rviz"/>
+
+    <!-- Robot State Publisher (URDF) -->
+    <node pkg="robot_state_publisher" exec="robot_state_publisher">
+        <param name="robot_description" value="$(command 'xacro $(var urdf_path)')"/>
+    </node>
+
+    <!-- Joint State Publisher (optional) -->
+    <node pkg="joint_state_publisher_gui" exec="joint_state_publisher_gui" />
+
+    <!-- RPLIDAR C1 driver -->
+    <include file="$(find-pkg-share rplidar_ros)/launch/view_rplidar_c1_launch.py" />
+
+    <!-- EKF Localization -->
+    <include file="$(find-pkg-share robot_localization)/launch/ekf_new.launch.py"/>
+
+    <!-- RViz2 -->
+    <node pkg="rviz2" exec="rviz2" output="screen" args="-d $(var rviz_path)"/>
+</launch>
+                                                                                                        
